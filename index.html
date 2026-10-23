@@ -1,168 +1,173 @@
 <!doctype html>
 <html lang="ja">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#111827">
-<title>答案画像処理ラボ | Phase 1</title>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#10151c"><title>採点ナビ | 統合プロトタイプ</title>
 <style>
-:root{color-scheme:dark;--bg:#0b0f14;--panel:#141b23;--line:#293442;--text:#edf2f7;--muted:#9aa8b7;--accent:#77aaff;--good:#74d6a0;--warn:#ffd27a}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.5}
-header{padding:18px 14px;border-bottom:1px solid var(--line);background:#10161e}header h1{font-size:20px;margin:0 0 4px}header p{margin:0;color:var(--muted);font-size:12px}
-main{max-width:1000px;margin:auto;padding:12px;display:grid;gap:12px}.panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:13px;min-width:0}
-h2{font-size:15px;margin:0 0 9px}.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-button,.filelabel{background:#202b38;color:var(--text);border:1px solid #3b4a5d;border-radius:8px;padding:10px 12px;font-size:14px;font-weight:600;cursor:pointer}
-button.primary{background:#2459a6;border-color:#3877d0}button:disabled{opacity:.4;cursor:not-allowed}input[type=file]{display:none}
-canvas{display:block;max-width:100%;height:auto;margin:10px auto 0;background:#080b0f;border:1px solid var(--line);border-radius:7px;touch-action:none}
-#sourceCanvas{cursor:crosshair}.status{font-size:12px;color:var(--muted);margin-top:8px;white-space:pre-wrap}.status.good{color:var(--good)}.status.warn{color:var(--warn)}
-.note{font-size:12px;color:var(--muted);margin:7px 0 0}textarea{width:100%;min-height:145px;resize:vertical;background:#0c1219;color:var(--text);border:1px solid #344253;border-radius:8px;padding:10px;font:inherit;margin-top:9px}
-progress{width:100%;accent-color:var(--accent);margin-top:8px}.hidden{display:none!important}
-@media(min-width:760px){main{grid-template-columns:1fr 1fr}.wide{grid-column:1/-1}}
-</style>
-</head>
+:root{color-scheme:dark;--bg:#0b0f14;--panel:#141b23;--line:#2b3745;--text:#edf2f7;--muted:#9eacbb;--blue:#3678cf;--green:#53c991;--red:#ed7474}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+header{padding:15px;background:#10161e;border-bottom:1px solid var(--line)}header h1{font-size:19px;margin:0}header p{font-size:12px;color:var(--muted);margin:3px 0 0}
+nav{display:flex;gap:6px;overflow-x:auto;padding:10px;background:#0e141b;border-bottom:1px solid var(--line)}nav button{white-space:nowrap}
+main{max-width:1100px;margin:auto;padding:12px;display:grid;gap:12px}.panel{background:var(--panel);border:1px solid var(--line);border-radius:11px;padding:13px;min-width:0}h2{font-size:16px;margin:0 0 10px}h3{font-size:14px;margin:14px 0 7px}.muted,.note{font-size:12px;color:var(--muted)}.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.grid{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+label{display:block;font-size:12px;color:var(--muted);margin:6px 0 3px}input,select,textarea{width:100%;padding:9px;border:1px solid #354354;border-radius:7px;background:#0c1219;color:var(--text);font:inherit}input[type=checkbox]{width:auto}textarea{min-height:85px;resize:vertical}button,.filebtn{background:#202b38;color:var(--text);border:1px solid #3b4a5d;border-radius:7px;padding:9px 11px;font:inherit;font-weight:600;cursor:pointer}button.primary{background:#2459a6;border-color:#3877d0}button.danger{border-color:#804646;color:#ffb2b2}button:disabled{opacity:.4;cursor:not-allowed}.tab{display:none}.tab.active{display:block}.hidden{display:none!important}.status{font-size:12px;color:var(--muted);white-space:pre-wrap;margin-top:8px}.ok{color:var(--green)}.err{color:var(--red)}table{border-collapse:collapse;width:100%;font-size:13px;margin-top:8px}td,th{text-align:left;padding:8px;border-bottom:1px solid var(--line);vertical-align:top}th{color:#c7d5e4;background:#1a2430}td button{padding:5px 7px;font-size:12px}.scroll{overflow:auto;max-width:100%}canvas{display:block;max-width:100%;height:auto;border:1px solid var(--line);border-radius:7px;margin-top:8px;touch-action:none;background:#080b0f}progress{width:100%;margin-top:8px}small{color:var(--muted)}.statgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px}.stat{background:#0d141c;border:1px solid var(--line);padding:12px;border-radius:8px}.stat strong{font-size:22px;display:block}.studentcard{border:1px solid var(--line);padding:9px;border-radius:8px;margin:7px 0}.inline{display:flex;gap:8px;align-items:center}.inline>*{flex:1}.pill{display:inline-block;padding:2px 7px;border-radius:10px;background:#263749;font-size:11px}
+@media(min-width:800px){main{grid-template-columns:1fr 1fr}.full{grid-column:1/-1}}
+</style></head>
 <body>
-<header><h1>答案画像処理ラボ</h1><p>Phase 1 · 画像アップロード / 手動切り出し / OCR（画像補正なし）</p></header>
+<header><h1>採点ナビ — 統合プロトタイプ</h1><p>学校・名簿・科目・テスト・設問・答案・採点・成績表（端末内保存）</p></header>
+<nav>
+<button data-tab="school">学校・名簿</button><button data-tab="subjects">科目・テスト</button><button data-tab="questions">解答用紙・設問</button><button data-tab="marking">答案採点</button><button data-tab="review">採点確認</button><button data-tab="reports">統計・成績表</button><button data-tab="backup">データ管理</button>
+</nav>
 <main>
-<section class="panel wide">
-<h2>1. 答案画像をアップロード</h2>
-<div class="row"><label class="filelabel" for="file">画像を選択</label><input id="file" type="file" accept="image/jpeg,image/png,image/webp,image/heic,image/*"><button id="reset">リセット</button></div>
-<p class="note">画像はこのページ内で処理します。元画像は外部OCRサービスへ送信しません。OCR実行時はTesseract.jsと言語データの読み込みにインターネット接続が必要です。</p>
-<div id="sourceStatus" class="status">画像が選択されていません。</div>
-<canvas id="sourceCanvas" class="hidden"></canvas>
+<section id="school" class="tab active full">
+<div class="panel">
+<h2>1. 学校設定</h2><div class="grid"><div><label>学校名</label><input id="schoolName" placeholder="例：〇〇高等学校"></div><div><label>学期制</label><select id="terms"><option value="2">2学期制</option><option value="3">3学期制</option></select></div></div><div class="row" style="margin-top:9px"><button class="primary" id="saveSchool">学校設定を保存</button><span id="schoolStatus" class="status"></span></div>
+</div>
+<div class="panel">
+<h2>2. 学年・学級・生徒</h2><div class="grid"><div><label>学年</label><select id="grade"><option value="1">1学年</option><option value="2">2学年</option><option value="3">3学年</option><option value="4">その他</option></select></div><div><label>学級名</label><input id="className" placeholder="例：1年A組"></div><div><label>担任名</label><input id="homeroom" placeholder="例：山田太郎"></div></div><div class="row" style="margin-top:8px"><button id="addClass" class="primary">学級を作成</button></div>
+<h3>生徒を追加</h3><div class="grid"><div><label>追加先学級</label><select id="studentClass"></select></div><div><label>出席番号</label><input id="studentNo" inputmode="numeric" type="number" min="1"></div><div><label>氏名</label><input id="studentName"></div><div><label>氏名（ふりがな）</label><input id="studentKana"></div></div><div class="row" style="margin-top:8px"><button id="addStudent" class="primary">生徒を登録</button></div><div id="classList" class="scroll"></div>
+</div>
 </section>
-<section class="panel wide">
-<h2>2. 解答欄を手動で切り出す</h2>
-<p class="note">画像上で指またはマウスを押したままドラッグして、切り出したい範囲を四角く囲んでください。マーカー検出・画像補正は行いません。</p>
-<div class="row"><button id="clearSelection" disabled>選択範囲を解除</button><button id="crop" class="primary" disabled>選択範囲を切り出す</button></div>
-<div id="cropStatus" class="status">先に画像をアップロードしてください。</div>
-<canvas id="cropResult" class="hidden"></canvas>
-<div class="row"><button id="downloadCrop" disabled>切り出し画像を保存</button></div>
+<section id="subjects" class="tab">
+<div class="panel"><h2>3. 科目を作成</h2><label>科目名</label><input id="subjectName" placeholder="例：物理基礎"><label>教科担当名</label><input id="subjectTeacher" placeholder="例：山田先生"><label>対象学級（複数選択可）</label><div id="subjectClasses"></div><div class="row" style="margin-top:8px"><button id="addSubject" class="primary">科目を登録</button></div><div id="subjectList"></div></div>
+<div class="panel"><h2>4. テストを作成</h2><label>テスト名</label><input id="testName" placeholder="例：2学期期末考査"><label>科目</label><select id="testSubject"></select><label>実施学級（科目に登録済みの学級から選択）</label><div id="testClasses"></div><div class="row" style="margin-top:8px"><button id="addTest" class="primary">テストを作成</button></div><div id="testList"></div></div>
 </section>
-<section class="panel">
-<h2>3. OCRで文字を読み取る</h2>
-<div class="row"><button id="ocr" class="primary" disabled>切り出した画像を読み取る</button><button id="copy" disabled>結果をコピー</button></div>
-<p class="note">日本語・英数字の読み取りを試します。手書き文字は誤認識する場合があるため、結果を必ず確認してください。</p>
-<progress id="progress" max="1" value="0" class="hidden"></progress>
-<div id="ocrStatus" class="status">切り出し後にOCRを実行できます。</div>
-<textarea id="ocrText" placeholder="OCR結果がここに表示されます。必要に応じて編集できます。"></textarea>
+<section id="questions" class="tab">
+<div class="panel full"><h2>5. 解答用紙テンプレート</h2><label>対象テスト</label><select id="templateTest"></select><label>解答用紙画像</label><input id="templateFile" type="file" accept="image/*"><p class="note">このプロトタイプでは自動補正を行いません。テンプレート画像を表示し、解答欄の4隅をタップして登録できます。テンプレート画像は端末内に保存されます。</p><div class="row"><button id="saveTemplate" class="primary">テンプレート画像を登録</button><button id="clearCorners">角の選択をクリア</button></div><div id="templateStatus" class="status"></div><canvas id="templateCanvas" class="hidden"></canvas><div class="row"><button id="saveCorners" disabled>選択した4点を解答欄として保存</button></div><div id="boxList"></div></div>
+<div class="panel"><h2>6. 大問・小問と採点基準</h2><label>対象テスト</label><select id="questionTest"></select><div class="grid"><div><label>大問番号・名称</label><input id="major" placeholder="例：大問1"></div><div><label>小問番号・名称</label><input id="minor" placeholder="例：（1）"></div></div><label>模範解答（テキスト）</label><input id="modelAnswer" placeholder="例：慣性の法則"><label>許容する別解（| 区切り）</label><input id="alternatives" placeholder="例：ニュートンの第一法則|慣性法則"><label>部分点キーワードと点数（1行に1つ、形式：キーワード=点数）</label><textarea id="keywords" placeholder="例：速度=1&#10;一定=1"></textarea><div class="grid"><div><label>知識・技能 配点</label><input id="pKnowledge" type="number" min="0" value="0"></div><div><label>思考・判断・表現 配点</label><input id="pThinking" type="number" min="0" value="0"></div><div><label>主体的に学習に取り組む態度 配点</label><input id="pAttitude" type="number" min="0" value="0"></div></div><p class="note">キーワード採点は単純一致の暫定判定です。漢字の意味・計算過程・表現の妥当性を保証しないため、必ず採点確認で人が確認してください。</p><div class="row"><button id="addQuestion" class="primary">小問を登録</button></div><div id="questionList"></div></div>
 </section>
-<section class="panel">
-<h2>使い方・制約</h2>
-<p class="note">1. 画像を選択します。2. 画像上をドラッグして解答欄を囲みます。3. 切り出し画像を確認します。4. OCRを実行します。</p>
-<p class="note">この版は画像の回転・台形補正を行いません。手書き文字の認識精度には限界があります。画像やOCR結果はページ内で保持するだけで、リロードすると消えます。</p>
+<section id="marking" class="tab">
+<div class="panel full"><h2>7. 答案をアップロードして採点</h2><label>対象テスト</label><select id="markTest"></select><label>答案画像（複数選択可）</label><input id="answerFiles" type="file" accept="image/*" multiple><div class="row" style="margin-top:8px"><button id="readAnswers" class="primary">答案画像を登録・OCR</button><button id="startMark" disabled>採点を開始</button></div><progress id="ocrProgress" max="1" value="0" class="hidden"></progress><div id="markStatus" class="status">答案を登録してください。OCRはネット接続が必要です。</div><div id="answerList"></div></div>
+</section>
+<section id="review" class="tab">
+<div class="panel full"><h2>8. 採点確認・修正</h2><label>対象テスト</label><select id="reviewTest"></select><div class="row"><button id="reviewByStudent" class="primary">個別答案確認モード</button><button id="reviewByQuestion">設問一括確認モード</button></div><div id="reviewContent"></div></div>
+</section>
+<section id="reports" class="tab">
+<div class="panel full"><h2>9. 統計・個人成績表</h2><label>対象テスト</label><select id="reportTest"></select><div id="stats"></div><label>生徒</label><select id="reportStudent"></select><div class="row"><button id="makeReport" class="primary">個人成績表を表示</button><button id="printReport">印刷 / PDF保存</button></div><div id="report"></div></div>
+</section>
+<section id="backup" class="tab full">
+<div class="panel"><h2>データの書き出し・読み込み</h2><p class="note">データはこのブラウザのlocalStorageに保存されます。端末・ブラウザ間では同期されません。ブラウザデータ消去で失われる場合があるため、定期的にバックアップしてください。</p><div class="row"><button id="exportData" class="primary">全データをJSON保存</button><label class="filebtn" for="importData">JSONバックアップを読み込む</label><input id="importData" type="file" accept="application/json"><button id="wipe" class="danger">全データを削除</button></div><div id="backupStatus" class="status"></div><h3>本番運用について</h3><p class="note">このHTMLは単一端末で動かす試作版です。複数教員での共有、アカウント認証、権限管理、監査ログ、サーバー側バックアップ、個人情報保護を満たす本番環境ではありません。実在する生徒の情報を登録する前に、学校の承認を得た認証付きサーバー・データベース構成へ移行してください。</p></div>
 </section>
 </main>
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 <script>
-const $=id=>document.getElementById(id);
-const source=$('sourceCanvas'), resultCanvas=$('cropResult'), baseCanvas=document.createElement('canvas');
-let imageUrl=null, selection=null, dragStart=null, dragging=false, worker=null, croppedBlob=null;
-function status(id,msg,kind=''){const e=$(id);e.textContent=msg;e.className='status '+kind}
-function show(c){c.classList.remove('hidden')}
-function hide(c){c.classList.add('hidden')}
-function drawSelection(){
- const ctx=source.getContext('2d');
- if(!imageUrl)return;
- const img=new Image();
- img.onload=()=>{
-  ctx.clearRect(0,0,source.width,source.height);ctx.drawImage(baseCanvas,0,0);
-  if(selection){
-   const {x,y,w,h}=selection;
-   ctx.save();ctx.fillStyle='rgba(0,0,0,.42)';ctx.fillRect(0,0,source.width,source.height);
-   ctx.clearRect(x,y,w,h);ctx.drawImage(img,x,y,w,h,x,y,w,h);
-   ctx.strokeStyle='#ff4242';ctx.lineWidth=Math.max(2,source.width/500);ctx.strokeRect(x,y,w,h);
-   const r=Math.max(4,source.width/160);[[x,y],[x+w,y],[x+w,y+h],[x,y+h]].forEach(([px,py])=>{ctx.beginPath();ctx.arc(px,py,r,0,Math.PI*2);ctx.fillStyle='#ff4242';ctx.fill()});
-   ctx.restore();
-  }
- };
- img.src=imageUrl;
+const $=id=>document.getElementById(id),KEY='saiten_navi_proto_v1';
+const fresh=()=>({school:{name:'',terms:3},classes:[],subjects:[],tests:[],templates:{},questions:[],answers:[]});
+let db=load(),templateImage=null,templateImageData=null,templatePoints=[],ocrWorker=null,reviewMode='student';
+function load(){try{return {...fresh(),...JSON.parse(localStorage.getItem(KEY)||'{}')}}catch{return fresh()}}
+function save(){localStorage.setItem(KEY,JSON.stringify(db));renderAll()}
+function id(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function msg(id,t,kind=''){const e=$(id);e.textContent=t;e.className='status '+kind}
+function selectedChecks(container){return [...$(container).querySelectorAll('input[type=checkbox]:checked')].map(x=>x.value)}
+function options(items,placeholder='選択してください'){return `<option value="">${placeholder}</option>`+items.map(x=>`<option value="${esc(x.id)}">${esc(x.name)}</option>`).join('')}
+function classLabel(c){return `${c.grade}学年 ${c.name}`}
+function studentById(sid){for(const c of db.classes){const s=c.students.find(s=>s.id===sid);if(s)return {s,c}}return null}
+function testQuestions(tid){return db.questions.filter(q=>q.testId===tid)}
+function testAnswers(tid){return db.answers.filter(a=>a.testId===tid)}
+function refreshSelects(){
+ const pairs=[['testSubject',db.subjects],['templateTest',db.tests],['questionTest',db.tests],['markTest',db.tests],['reviewTest',db.tests],['reportTest',db.tests]];
+ for(const [el,arr] of pairs){const old=$(el).value;$(el).innerHTML=options(arr);if(arr.some(x=>x.id===old))$(el).value=old}
+ const oldC=$('studentClass').value;$('studentClass').innerHTML=options(db.classes.map(c=>({id:c.id,name:classLabel(c)})));if(db.classes.some(c=>c.id===oldC))$('studentClass').value=oldC;
+ const oldS=$('reportStudent').value;const students=db.classes.flatMap(c=>c.students.map(s=>({id:s.id,name:`${classLabel(c)} ${s.no}番 ${s.name}`})));$('reportStudent').innerHTML=options(students);if(students.some(s=>s.id===oldS))$('reportStudent').value=oldS;
+ renderSubjectChecks();renderTestChecks();
 }
-function canvasPoint(e){
- const r=source.getBoundingClientRect();
- return {x:Math.max(0,Math.min(source.width,(e.clientX-r.left)*source.width/r.width)),y:Math.max(0,Math.min(source.height,(e.clientY-r.top)*source.height/r.height))};
+function renderSubjectChecks(){const el=$('subjectClasses');el.innerHTML=db.classes.length?db.classes.map(c=>`<label><input type="checkbox" value="${c.id}"> ${esc(classLabel(c))}</label>`).join(''):'<p class="note">先に学級を作成してください。</p>'}
+function renderTestChecks(){const s=db.subjects.find(s=>s.id===$('testSubject').value);const el=$('testClasses');el.innerHTML=s?s.classIds.map(cid=>db.classes.find(c=>c.id===cid)).filter(Boolean).map(c=>`<label><input type="checkbox" value="${c.id}"> ${esc(classLabel(c))}</label>`).join(''):'<p class="note">科目を選択してください。</p>'}
+function renderClasses(){
+ $('classList').innerHTML=db.classes.length?db.classes.map(c=>`<div class="studentcard"><div class="row"><strong>${esc(classLabel(c))}</strong><span class="muted">担任：${esc(c.homeroom)}</span><button data-delclass="${c.id}" class="danger">学級削除</button></div><div class="scroll"><table><thead><tr><th>番号</th><th>氏名</th><th>ふりがな</th><th></th></tr></thead><tbody>${c.students.slice().sort((a,b)=>a.no-b.no).map(s=>`<tr><td>${s.no}</td><td>${esc(s.name)}</td><td>${esc(s.kana)}</td><td><button data-delstudent="${s.id}">削除</button></td></tr>`).join('')}</tbody></table></div></div>`).join(''):'<p class="note">学級はまだありません。</p>';
 }
-function updateSelectionFromDrag(p){
- const x=Math.min(dragStart.x,p.x),y=Math.min(dragStart.y,p.y);
- selection={x:Math.round(x),y:Math.round(y),w:Math.round(Math.abs(p.x-dragStart.x)),h:Math.round(Math.abs(p.y-dragStart.y))};
- drawSelection();
- $('crop').disabled=selection.w<8||selection.h<8;
- $('clearSelection').disabled=false;
- status('cropStatus',`選択範囲：${selection.w} × ${selection.h}px。「選択範囲を切り出す」を押してください。`);
+function renderSubjects(){$('subjectList').innerHTML=db.subjects.map(s=>`<div class="studentcard"><strong>${esc(s.name)}</strong> <span class="muted">${esc(s.teacher)}</span><div class="muted">${s.classIds.map(id=>db.classes.find(c=>c.id===id)).filter(Boolean).map(classLabel).map(esc).join('、')}</div><button data-delsub="${s.id}" class="danger">削除</button></div>`).join('')||'<p class="note">科目はまだありません。</p>'}
+function renderTests(){$('testList').innerHTML=db.tests.map(t=>{const s=db.subjects.find(s=>s.id===t.subjectId);return `<div class="studentcard"><strong>${esc(t.name)}</strong> <span class="pill">${esc(s?.name||'科目不明')}</span><div class="muted">${t.classIds.map(id=>db.classes.find(c=>c.id===id)).filter(Boolean).map(classLabel).map(esc).join('、')}</div><button data-deltest="${t.id}" class="danger">削除</button></div>`}).join('')||'<p class="note">テストはまだありません。</p>'}
+function renderQuestions(){$('questionList').innerHTML=db.questions.map(q=>`<div class="studentcard"><strong>${esc(q.major)} ${esc(q.minor)}</strong> — ${esc(q.model||'（模範解答未設定）')}<div class="muted">知技 ${q.pk}点 / 思判表 ${q.pt}点 / 主体 ${q.pa}点 · 解答欄 ${q.box?'登録済み':'未登録'}</div><button data-delq="${q.id}" class="danger">小問削除</button></div>`).join('')||'<p class="note">小問はまだありません。</p>'}
+function renderBoxes(){const tid=$('templateTest').value,t=db.templates[tid];$('boxList').innerHTML=t?`<p class="note">登録済みの解答欄</p>`+t.boxes.map(b=>`<div class="studentcard">${esc(b.label)}：x=${b.x}, y=${b.y}, w=${b.w}, h=${b.h} <button data-delbox="${b.id}">削除</button></div>`).join(''):'<p class="note">テンプレートまたは解答欄がありません。</p>'}
+function renderAnswers(){$('answerList').innerHTML=testAnswers($('markTest').value).map(a=>{const st=studentById(a.studentId);return `<div class="studentcard"><div class="row"><strong>${esc(a.fileName)}</strong><span class="pill">${st?esc(classLabel(st.c)+' '+st.s.no+'番 '+st.s.name):'生徒未特定'}</span><button data-openanswer="${a.id}">確認・割当</button><button data-delanswer="${a.id}" class="danger">削除</button></div><div class="muted">OCR：${esc(a.ocrText.slice(0,180))}</div><div class="muted">合計：${a.total??'未採点'}点</div></div>`}).join('')||'<p class="note">答案はまだ登録されていません。</p>'}
+function renderAll(){
+ $('schoolName').value=db.school.name||'';$('terms').value=db.school.terms||3;
+ renderClasses();refreshSelects();renderSubjects();renderTests();renderQuestions();renderBoxes();renderAnswers();renderStats();
 }
-$('file').addEventListener('change',e=>{
- const f=e.target.files&&e.target.files[0];if(!f)return;
- if(!f.type.startsWith('image/')){status('sourceStatus','画像ファイルを選択してください。','warn');return}
- if(imageUrl)URL.revokeObjectURL(imageUrl);
- imageUrl=URL.createObjectURL(f);const img=new Image();
- img.onload=()=>{
-  const scale=Math.min(1,1800/img.width);
-  source.width=Math.max(1,Math.round(img.width*scale));source.height=Math.max(1,Math.round(img.height*scale));
-  baseCanvas.width=source.width;baseCanvas.height=source.height;baseCanvas.getContext('2d').drawImage(img,0,0,source.width,source.height);
-  source.getContext('2d').drawImage(baseCanvas,0,0);
-  show(source);selection=null;dragStart=null;croppedBlob=null;hide(resultCanvas);
-  $('crop').disabled=true;$('clearSelection').disabled=true;$('downloadCrop').disabled=true;$('ocr').disabled=true;$('copy').disabled=true;$('ocrText').value='';
-  status('sourceStatus',`読み込み完了：${img.width} × ${img.height}px（表示・処理サイズ：${source.width} × ${source.height}px）`,'good');
-  status('cropStatus','画像上をドラッグして、解答欄を四角く囲んでください。');
-  status('ocrStatus','切り出し後にOCRを実行できます。');
- };
- img.onerror=()=>status('sourceStatus','画像を読み込めませんでした。別のJPGまたはPNGで試してください。','warn');
- img.src=imageUrl;
-});
-source.addEventListener('pointerdown',e=>{
- if(!imageUrl)return;e.preventDefault();source.setPointerCapture(e.pointerId);
- dragStart=canvasPoint(e);dragging=true;selection={x:dragStart.x,y:dragStart.y,w:0,h:0};
-});
-source.addEventListener('pointermove',e=>{if(!dragging||!dragStart)return;updateSelectionFromDrag(canvasPoint(e))});
-function endDrag(e){if(!dragging)return;dragging=false;if(dragStart){updateSelectionFromDrag(canvasPoint(e));}dragStart=null;}
-source.addEventListener('pointerup',endDrag);source.addEventListener('pointercancel',endDrag);
-$('clearSelection').onclick=()=>{selection=null;drawSelection();hide(resultCanvas);croppedBlob=null;$('crop').disabled=true;$('clearSelection').disabled=true;$('downloadCrop').disabled=true;$('ocr').disabled=true;$('copy').disabled=true;status('cropStatus','選択範囲を解除しました。')};
-$('crop').onclick=()=>{
- if(!selection||selection.w<8||selection.h<8)return;
- const x=Math.max(0,Math.floor(selection.x)),y=Math.max(0,Math.floor(selection.y));
- const w=Math.min(source.width-x,Math.floor(selection.w)),h=Math.min(source.height-y,Math.floor(selection.h));
- resultCanvas.width=w;resultCanvas.height=h;
- const ctx=resultCanvas.getContext('2d');
- // Use the unmarked, downscaled original so the red selection overlay is not included.
- ctx.drawImage(baseCanvas,x,y,w,h,0,0,w,h);show(resultCanvas);
- resultCanvas.toBlob(blob=>{croppedBlob=blob;$('ocr').disabled=!blob;$('downloadCrop').disabled=!blob;status('cropStatus',`切り出し完了：${w} × ${h}px。画像を確認してからOCRを実行してください。`,'good')},'image/png');
-};
-$('downloadCrop').onclick=()=>{
- if(!croppedBlob)return;const url=URL.createObjectURL(croppedBlob),a=document.createElement('a');
- a.href=url;a.download='answer-crop.png';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
-};
-$('ocr').onclick=async()=>{
- if(!croppedBlob)return;
- if(!window.Tesseract){status('ocrStatus','OCRライブラリを読み込めません。通信状態を確認してページを再読み込みしてください。','warn');return}
- $('ocr').disabled=true;$('progress').classList.remove('hidden');$('progress').value=0;
- status('ocrStatus','OCRエンジンを準備しています。初回は言語データの読み込みに時間がかかります。');
+function renderStats(){
+ const t=$('reportTest').value,answers=testAnswers(t).filter(a=>a.total!==undefined);
+ if(!t||!answers.length){$('stats').innerHTML='<p class="note">採点済みの答案がありません。</p>';return}
+ const scores=answers.map(a=>a.total),avg=scores.reduce((a,b)=>a+b,0)/scores.length,sorted=[...scores].sort((a,b)=>a-b),max=Math.max(...scores),min=Math.min(...scores);
+ $('stats').innerHTML=`<div class="statgrid"><div class="stat"><span class="muted">採点人数</span><strong>${scores.length}</strong></div><div class="stat"><span class="muted">平均点</span><strong>${avg.toFixed(1)}</strong></div><div class="stat"><span class="muted">最高点</span><strong>${max}</strong></div><div class="stat"><span class="muted">最低点</span><strong>${min}</strong></div><div class="stat"><span class="muted">中央値</span><strong>${sorted[Math.floor((sorted.length-1)/2)]}</strong></div></div><div class="scroll"><table><thead><tr><th>生徒</th><th>得点</th></tr></thead><tbody>${answers.map(a=>{const st=studentById(a.studentId);return `<tr><td>${st?esc(classLabel(st.c)+' '+st.s.no+'番 '+st.s.name):'生徒未特定'}</td><td>${a.total}</td></tr>`}).join('')}</tbody></table></div>`;
+}
+$('saveSchool').onclick=()=>{db.school={name:$('schoolName').value.trim(),terms:Number($('terms').value)};save();msg('schoolStatus','学校設定を保存しました。','ok')};
+$('addClass').onclick=()=>{const name=$('className').value.trim();if(!name){alert('学級名を入力してください');return}db.classes.push({id:id(),grade:Number($('grade').value),name,homeroom:$('homeroom').value.trim(),students:[]});$('className').value='';$('homeroom').value='';save()};
+$('addStudent').onclick=()=>{const c=db.classes.find(c=>c.id===$('studentClass').value),no=Number($('studentNo').value),name=$('studentName').value.trim();if(!c||!no||!name){alert('学級・出席番号・氏名を入力してください');return}if(c.students.some(s=>s.no===no)){alert('その学級には同じ出席番号が登録済みです');return}c.students.push({id:id(),no,name,kana:$('studentKana').value.trim()});$('studentNo').value='';$('studentName').value='';$('studentKana').value='';save()};
+$('classList').addEventListener('click',e=>{const d=e.target.dataset;if(d.delclass){if(confirm('この学級を削除しますか？')){db.classes=db.classes.filter(c=>c.id!==d.delclass);db.subjects.forEach(s=>s.classIds=s.classIds.filter(x=>x!==d.delclass));save()}}if(d.delstudent){db.classes.forEach(c=>c.students=c.students.filter(s=>s.id!==d.delstudent));db.answers.forEach(a=>{if(a.studentId===d.delstudent)a.studentId=null});save()}});
+$('testSubject').onchange=renderTestChecks;
+$('addSubject').onclick=()=>{const name=$('subjectName').value.trim(),classIds=selectedChecks('subjectClasses');if(!name||!classIds.length){alert('科目名と対象学級を選択してください');return}db.subjects.push({id:id(),name,teacher:$('subjectTeacher').value.trim(),classIds});$('subjectName').value='';$('subjectTeacher').value='';save()};
+$('addTest').onclick=()=>{const name=$('testName').value.trim(),subjectId=$('testSubject').value,classIds=selectedChecks('testClasses');if(!name||!subjectId||!classIds.length){alert('テスト名・科目・実施学級を設定してください');return}db.tests.push({id:id(),name,subjectId,classIds});$('testName').value='';save()};
+$('subjectList').addEventListener('click',e=>{if(e.target.dataset.delsub&&confirm('科目を削除しますか？')){db.subjects=db.subjects.filter(s=>s.id!==e.target.dataset.delsub);save()}});
+$('testList').addEventListener('click',e=>{if(e.target.dataset.deltest&&confirm('テストと関連データを削除しますか？')){const t=e.target.dataset.deltest;db.tests=db.tests.filter(x=>x.id!==t);delete db.templates[t];db.questions=db.questions.filter(q=>q.testId!==t);db.answers=db.answers.filter(a=>a.testId!==t);save()}});
+$('addQuestion').onclick=()=>{const testId=$('questionTest').value,model=$('modelAnswer').value.trim(),pk=Number($('pKnowledge').value)||0,pt=Number($('pThinking').value)||0,pa=Number($('pAttitude').value)||0;if(!testId||!$('minor').value.trim()){alert('対象テストと小問名を入力してください');return}const keywords=$('keywords').value.split('\n').map(x=>{const i=x.lastIndexOf('=');return i>0?{word:x.slice(0,i).trim(),points:Number(x.slice(i+1))||0}:null}).filter(x=>x&&x.word);db.questions.push({id:id(),testId,major:$('major').value.trim()||'大問',minor:$('minor').value.trim(),model,alternatives:$('alternatives').value.split('|').map(x=>x.trim()).filter(Boolean),keywords,pk,pt,pa,box:null});$('minor').value='';$('modelAnswer').value='';$('alternatives').value='';$('keywords').value='';save()};
+$('questionList').addEventListener('click',e=>{if(e.target.dataset.delq&&confirm('小問を削除しますか？')){db.questions=db.questions.filter(q=>q.id!==e.target.dataset.delq);save()}});
+$('templateTest').onchange=()=>{templatePoints=[];const t=db.templates[$('templateTest').value];if(t?.dataUrl){loadTemplateData(t.dataUrl)}else{templateImage=null;templateImageData=null;hide($('templateCanvas'));renderBoxes()}};
+function loadTemplateData(dataUrl){const img=new Image();img.onload=()=>{const c=$('templateCanvas'),scale=Math.min(1,1500/img.width);c.width=Math.round(img.width*scale);c.height=Math.round(img.height*scale);c.getContext('2d').drawImage(img,0,0,c.width,c.height);templateImageData=dataUrl;templateImage={img,scale};show(c);drawTemplatePoints();msg('templateStatus','テンプレートを表示しました。4点をタップして解答欄を指定できます。','ok');renderBoxes()};img.onerror=()=>msg('templateStatus','画像を読み込めませんでした。','err');img.src=dataUrl}
+$('templateFile').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{templateImageData=r.result;loadTemplateData(r.result)};r.readAsDataURL(f)};
+$('saveTemplate').onclick=()=>{const tid=$('templateTest').value;if(!tid||!templateImageData){alert('テストとテンプレート画像を選択してください');return}db.templates[tid]=db.templates[tid]||{boxes:[]};db.templates[tid].dataUrl=templateImageData;save();msg('templateStatus','テンプレートを端末内に保存しました。','ok')};
+function drawTemplatePoints(){if(!templateImage)return;const c=$('templateCanvas'),ctx=c.getContext('2d');ctx.drawImage(templateImage.img,0,0,c.width,c.height);templatePoints.forEach((p,i)=>{ctx.beginPath();ctx.arc(p.x,p.y,5,0,Math.PI*2);ctx.fillStyle='#ff4141';ctx.fill();ctx.fillStyle='#fff';ctx.fillText(String(i+1),p.x+7,p.y-5)})}
+$('templateCanvas').onclick=e=>{if(!templateImage)return;const r=e.currentTarget.getBoundingClientRect(),x=(e.clientX-r.left)*e.currentTarget.width/r.width,y=(e.clientY-r.top)*e.currentTarget.height/r.height;if(templatePoints.length>=4)templatePoints=[];templatePoints.push({x:Math.round(x),y:Math.round(y)});drawTemplatePoints();$('saveCorners').disabled=templatePoints.length!==4;msg('templateStatus',`選択点 ${templatePoints.length}/4。左上→右上→右下→左下の順にタップしてください。`)};
+$('clearCorners').onclick=()=>{templatePoints=[];$('saveCorners').disabled=true;drawTemplatePoints()};
+$('saveCorners').onclick=()=>{const tid=$('templateTest').value;if(!tid||templatePoints.length!==4)return;const xs=templatePoints.map(p=>p.x),ys=templatePoints.map(p=>p.y),x=Math.min(...xs),y=Math.min(...ys),w=Math.max(...xs)-x,h=Math.max(...ys)-y;const q=testQuestions(tid).find(q=>!q.box);if(!q){alert('このテストに未登録の小問がないか、小問を先に作成してください。');return}q.box={x,y,w,h,canvasW:$('templateCanvas').width,canvasH:$('templateCanvas').height};const t=db.templates[tid]||(db.templates[tid]={boxes:[]});t.boxes.push({id:id(),label:q.major+' '+q.minor,x,y,w,h,qId:q.id});q.box=t.boxes[t.boxes.length-1];templatePoints=[];save();msg('templateStatus',`解答欄を登録しました（${w}×${h}px）。※この版では4点から外接矩形を作成します。`,'ok')};
+$('boxList').addEventListener('click',e=>{if(e.target.dataset.delbox){const tid=$('templateTest').value,bid=e.target.dataset.delbox,t=db.templates[tid];if(t){const b=t.boxes.find(x=>x.id===bid);if(b){const q=db.questions.find(q=>q.id===b.qId);if(q)q.box=null}t.boxes=t.boxes.filter(x=>x.id!==bid);save()}}});
+function imageDataUrl(file){return new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(r.result);r.onerror=reject;r.readAsDataURL(file)})}
+function cropDataUrl(dataUrl,box){return new Promise((resolve,reject)=>{const img=new Image();img.onload=()=>{const scale=img.width/box.canvasW,c=document.createElement('canvas');c.width=Math.max(1,Math.round(box.w*scale));c.height=Math.max(1,Math.round(box.h*scale));c.getContext('2d').drawImage(img,box.x*scale,box.y*scale,box.w*scale,box.h*scale,0,0,c.width,c.height);resolve(c.toDataURL('image/png'))};img.onerror=reject;img.src=dataUrl})}
+function prepOCR(dataUrl){return new Promise((resolve,reject)=>{const img=new Image();img.onload=()=>{const scale=Math.min(3,Math.max(2,Math.ceil(1400/Math.max(img.width,img.height))));const c=document.createElement('canvas');c.width=img.width*scale;c.height=img.height*scale;const x=c.getContext('2d',{willReadFrequently:true});x.imageSmoothingEnabled=true;x.imageSmoothingQuality='high';x.drawImage(img,0,0,c.width,c.height);const d=x.getImageData(0,0,c.width,c.height),a=d.data;for(let i=0;i<a.length;i+=4){const lum=.299*a[i]+.587*a[i+1]+.114*a[i+2];const contrast=Math.max(0,Math.min(255,(lum-128)*1.35+128));a[i]=a[i+1]=a[i+2]=contrast}x.putImageData(d,0,0);resolve(c.toDataURL('image/png'))};img.onerror=reject;img.src=dataUrl})}
+$('readAnswers').onclick=async()=>{
+ const tid=$('markTest').value,files=[...$('answerFiles').files];if(!tid||!files.length){alert('テストと答案画像を選択してください');return}
+ $('readAnswers').disabled=true;$('ocrProgress').classList.remove('hidden');$('ocrProgress').value=0;
  try{
-  if(!worker){
-   worker=await Tesseract.createWorker('jpn+eng',1,{logger:m=>{
-    if(m.status){status('ocrStatus',m.status+(m.progress!==undefined?' '+Math.round(m.progress*100)+'%':''));}
-    if(m.progress!==undefined)$('progress').value=m.progress;
-   }});
+  let worker=null;
+  if(window.Tesseract){msg('markStatus','OCRエンジンを準備しています。初回は言語データのダウンロードに時間がかかります。');worker=await Tesseract.createWorker('jpn+eng',1,{logger:m=>{if(m.progress!==undefined)$('ocrProgress').value=m.progress; if(m.status)msg('markStatus',m.status+(m.progress!==undefined?' '+Math.round(m.progress*100)+'%':''))}});await worker.setParameters({preserve_interword_spaces:'1',tessedit_pageseg_mode:'6'});}
+  else msg('markStatus','OCRライブラリが読み込めません。画像は登録しますがOCRは空欄になります。','err');
+  for(let i=0;i<files.length;i++){
+   const file=files[i],dataUrl=await imageDataUrl(file);let text='';
+   if(worker){try{const pre=await prepOCR(dataUrl),res=await worker.recognize(pre);text=res.data.text||''}catch(err){console.error(err)}}
+   db.answers.push({id:id(),testId:tid,fileName:file.name,dataUrl,ocrText:text,studentId:null,scores:{},total:undefined,confirmed:false});
+   msg('markStatus',`${i+1}/${files.length} 枚を登録しました。OCRは手書き文字を誤認識することがあるため、結果確認が必要です。`);
   }
-  const res=await worker.recognize(croppedBlob);
-  $('ocrText').value=res.data.text||'';
-  $('copy').disabled=!$('ocrText').value;
-  status('ocrStatus','OCRが完了しました。認識結果を確認・修正してください。','good');
- }catch(err){console.error(err);status('ocrStatus','OCRに失敗しました：'+(err&&err.message?err.message:String(err)),'warn')}
- finally{$('ocr').disabled=!croppedBlob}
+  if(worker)await worker.terminate();save();$('startMark').disabled=!testQuestions(tid).length;msg('markStatus',`${files.length}枚を登録しました。生徒の割当と設問登録を確認して「採点を開始」を押してください。`,'ok');
+ }catch(err){console.error(err);msg('markStatus','登録/OCRに失敗しました：'+err.message,'err')}
+ finally{$('readAnswers').disabled=false}
 };
-$('ocrText').addEventListener('input',()=>$('copy').disabled=!$('ocrText').value);
-$('copy').onclick=async()=>{
- const text=$('ocrText').value;
- try{if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(text)}else{throw new Error('clipboard unavailable')}
- status('ocrStatus','結果をコピーしました。','good')}
- catch(e){$('ocrText').focus();$('ocrText').select();status('ocrStatus','自動コピーできません。選択されたテキストを長押ししてコピーしてください。','warn')}
+$('markTest').onchange=()=>{$('startMark').disabled=!testQuestions($('markTest').value).length;renderAnswers()};
+$('answerList').addEventListener('click',e=>{const d=e.target.dataset;if(d.delanswer&&confirm('答案を削除しますか？')){db.answers=db.answers.filter(a=>a.id!==d.delanswer);save()}if(d.openanswer){const a=db.answers.find(a=>a.id===d.openanswer);if(!a)return;const tid=a.testId,eligible=db.classes.filter(c=>db.tests.find(t=>t.id===tid)?.classIds.includes(c.id)).flatMap(c=>c.students.map(s=>({s,c})));const opts='<option value="">未割当</option>'+eligible.map(({s,c})=>`<option value="${s.id}" ${s.id===a.studentId?'selected':''}>${esc(classLabel(c)+' '+s.no+'番 '+s.name+'（'+s.kana+'）')}</option>`).join('');const newText=prompt('OCR認識結果を確認・編集してください',a.ocrText);if(newText!==null)a.ocrText=newText;const sid=prompt('生徒IDを入力して割り当て（候補は下に表示）\\n'+eligible.map(({s,c})=>`${s.id} = ${classLabel(c)} ${s.no}番 ${s.name}`).join('\\n'),a.studentId||'');if(sid!==null)a.studentId=eligible.some(x=>x.s.id===sid)?sid:null;save()}});
+function normalize(s){return String(s||'').toLowerCase().replace(/\s+/g,'').replace(/[。、，,.・:：]/g,'')}
+function scoreAnswer(answer,q){
+ const raw=normalize(answer),model=normalize(q.model),alts=q.alternatives.map(normalize);
+ let max=Math.max(q.pk,q.pt,q.pa),score=0,reason='';
+ if(model&&raw===model||alts.includes(raw)){score=max;reason='模範解答/別解と完全一致'}
+ else if(q.keywords.length){score=q.keywords.filter(k=>raw.includes(normalize(k.word))).reduce((n,k)=>n+k.points,0);score=Math.min(max,score);reason='キーワード部分点（要確認）'}
+ else {score=0;reason='自動判定できないため要確認'}
+ return {score,reason};
+}
+$('startMark').onclick=()=>{
+ const tid=$('markTest').value,qs=testQuestions(tid),ans=testAnswers(tid);if(!qs.length||!ans.length){alert('設問と答案を登録してください');return}
+ for(const a of ans){a.scores={};a.total=0;a.needsReview=true;
+  qs.forEach(q=>{const box=q.box,raw=box&&a.dataUrl?null:a.ocrText;const result=scoreAnswer(raw,q);a.scores[q.id]={score:result.score,answer:raw,reason:result.reason,confirmed:false};a.total+=result.score});
+ }
+ save();msg('markStatus','暫定採点を作成しました。解答欄単位のOCR抽出は未完成のため、現状の自動採点は答案全体のOCR文字列を基にした仮判定です。必ず採点確認で修正してください。','err');document.querySelector('[data-tab="review"]').click();
 };
-$('reset').onclick=()=>{
- if(imageUrl)URL.revokeObjectURL(imageUrl);imageUrl=null;selection=null;dragStart=null;dragging=false;croppedBlob=null;
- $('file').value='';source.width=1;source.height=1;baseCanvas.width=1;baseCanvas.height=1;resultCanvas.width=1;resultCanvas.height=1;hide(source);hide(resultCanvas);
- $('crop').disabled=true;$('clearSelection').disabled=true;$('downloadCrop').disabled=true;$('ocr').disabled=true;$('copy').disabled=true;$('ocrText').value='';$('progress').value=0;hide($('progress'));
- status('sourceStatus','画像が選択されていません。');status('cropStatus','先に画像をアップロードしてください。');status('ocrStatus','切り出し後にOCRを実行できます。');
-};
-window.addEventListener('beforeunload',()=>{if(worker)worker.terminate();if(imageUrl)URL.revokeObjectURL(imageUrl)});
-</script>
-</body>
-</html>
+$('reviewByStudent').onclick=()=>{reviewMode='student';renderReview()};$('reviewByQuestion').onclick=()=>{reviewMode='question';renderReview()};
+function renderReview(){
+ const tid=$('reviewTest').value,ans=testAnswers(tid),qs=testQuestions(tid),el=$('reviewContent');
+ if(!tid){el.innerHTML='<p class="note">テストを選択してください。</p>';return}
+ if(reviewMode==='student'){
+ el.innerHTML=ans.map(a=>{const st=studentById(a.studentId);return `<div class="studentcard"><div class="row"><strong>${esc(st?classLabel(st.c)+' '+st.s.no+'番 '+st.s.name:a.fileName)}</strong><span>合計 ${a.total??'未採点'}点</span></div><div class="grid"><div><img src="${a.dataUrl}" alt="答案" style="max-width:100%;max-height:240px;object-fit:contain"></div><div><label>OCR結果（編集可）</label><textarea data-ocr="${a.id}">${esc(a.ocrText)}</textarea>${qs.map(q=>{const s=a.scores?.[q.id];return `<div class="studentcard"><strong>${esc(q.major)} ${esc(q.minor)}</strong><div class="muted">模範解答：${esc(q.model)}</div><label>生徒の解答</label><input data-answer="${a.id}|${q.id}" value="${esc(s?.answer??a.ocrText)}"><label>得点（最大 ${q.pk+q.pt+q.pa} 点）</label><input type="number" min="0" max="${q.pk+q.pt+q.pa}" data-score="${a.id}|${q.id}" value="${s?.score??0}"><div class="muted">${esc(s?.reason||'未採点')}</div></div>`}).join('')}<button data-save-review="${a.id}" class="primary">この答案の修正を保存</button></div></div></div>`}).join('')||'<p class="note">答案がありません。</p>';
+ }else{
+ el.innerHTML=qs.map(q=>`<div class="studentcard"><h3>${esc(q.major)} ${esc(q.minor)} — 模範解答：${esc(q.model)}</h3>${ans.map(a=>{const st=studentById(a.studentId),s=a.scores?.[q.id];return `<div class="studentcard"><div class="row"><span>${esc(st?st.s.name:a.fileName)}</span><span class="muted">${esc(s?.answer??a.ocrText)}</span><label>得点<input type="number" min="0" max="${q.pk+q.pt+q.pa}" data-score="${a.id}|${q.id}" value="${s?.score??0}"></label><button data-save-q="${a.id}">保存</button></div></div>`}).join('')}</div>`).join('')||'<p class="note">設問がありません。</p>';
+ }
+}
+$('reviewTest').onchange=renderReview;
+$('reviewContent').addEventListener('click',e=>{const d=e.target.dataset;if(d.saveReview){const a=db.answers.find(a=>a.id===d.saveReview);const ta=document.querySelector(`[data-ocr="${a.id}"]`);if(ta)a.ocrText=ta.value;let total=0;testQuestions(a.testId).forEach(q=>{const inp=document.querySelector(`[data-score="${a.id}|${q.id}"]`),answer=document.querySelector(`[data-answer="${a.id}|${q.id}"]`);const score=Math.max(0,Math.min(q.pk+q.pt+q.pa,Number(inp?.value)||0));a.scores[q.id]={...(a.scores[q.id]||{}),score,answer:answer?.value??a.ocrText,confirmed:true};total+=score});a.total=total;a.confirmed=true;save();renderReview()}if(d.saveQ){const a=db.answers.find(a=>a.id===d.saveQ);let total=0;testQuestions(a.testId).forEach(q=>{const inp=document.querySelector(`[data-score="${a.id}|${q.id}"]`);const score=Math.max(0,Math.min(q.pk+q.pt+q.pa,Number(inp?.value)||0));a.scores[q.id]={...(a.scores[q.id]||{}),score,confirmed:true};total+=score});a.total=total;a.confirmed=true;save();renderReview()}});
+$('reviewContent').addEventListener('change',e=>{if(e.target.dataset.ocr){const a=db.answers.find(a=>a.id===e.target.dataset.ocr);if(a)a.ocrText=e.target.value}});
+$('reportTest').onchange=renderStats;
+$('makeReport').onclick=()=>{const sid=$('reportStudent').value,tid=$('reportTest').value,st=studentById(sid),a=testAnswers(tid).find(a=>a.studentId===sid),qs=testQuestions(tid);if(!st||!a){$('report').innerHTML='<p class="note">選択した生徒の答案が見つかりません。</p>';return}$('report').innerHTML=`<div id="printable" class="panel"><h2>${esc(db.school.name||'学校名未設定')} 個人成績表</h2><p>${esc(classLabel(st.c))} ${st.s.no}番　${esc(st.s.name)}（${esc(st.s.kana)}）</p><h3>${esc(db.tests.find(t=>t.id===tid)?.name||'テスト')}</h3><div class="statgrid"><div class="stat"><span class="muted">総合得点</span><strong>${a.total??'未採点'}</strong></div><div class="stat"><span class="muted">設問数</span><strong>${qs.length}</strong></div></div><table><thead><tr><th>設問</th><th>模範解答</th><th>解答</th><th>得点</th><th>満点</th></tr></thead><tbody>${qs.map(q=>`<tr><td>${esc(q.major)} ${esc(q.minor)}</td><td>${esc(q.model)}</td><td>${esc(a.scores?.[q.id]?.answer??a.ocrText)}</td><td>${a.scores?.[q.id]?.score??0}</td><td>${q.pk+q.pt+q.pa}</td></tr>`).join('')}</tbody></table><p class="muted">本帳票は試作版です。学校の正式帳票として利用する前に、配点・評価方式・表示内容を確認してください。</p></div>`};
+$('printReport').onclick=()=>window.print();
+$('exportData').onclick=()=>{const blob=new Blob([JSON.stringify(db,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='saiten-navi-backup.json';a.click();URL.revokeObjectURL(url);msg('backupStatus','JSONバックアップを保存しました。','ok')};
+$('importData').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const obj=JSON.parse(await f.text());if(!obj.school||!Array.isArray(obj.classes)||!Array.isArray(obj.tests))throw Error('形式が違います');db={...fresh(),...obj};save();msg('backupStatus','バックアップを読み込みました。','ok')}catch(err){msg('backupStatus','読み込みに失敗しました：'+err.message,'err')}};
+$('wipe').onclick=()=>{if(confirm('保存した全データを削除します。この操作は取り消せません。')){db=fresh();save();msg('backupStatus','全データを削除しました。','ok')}};
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));$(b.dataset.tab).classList.add('active');document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('primary',x===b));if(b.dataset.tab==='review')renderReview();if(b.dataset.tab==='reports')renderStats()});
+renderAll();
+</script></body></html>
