@@ -132,12 +132,21 @@ $('detect').onclick=()=>{
   status('cvStatus','ブラウザ内で黒い正方形を検出しています…');
   const candidates=findSquareCandidates(source);
   if(candidates.length<3){status('cvStatus',`正方形候補が${candidates.length}個しか見つかりません。画像の明るさ・マーカーの大きさを確認してください。`,'warn');return}
-  // Choose likely top-left, top-right, bottom-left candidates from the detected squares.
-  const tl=[...candidates].sort((a,b)=>(a.x+a.y)-(b.x+b.y))[0];
-  const rest=candidates.filter(c=>c!==tl);
-  const tr=[...rest].sort((a,b)=>(b.x-b.y)-(a.x-a.y))[0];
-  const bl=[...rest].filter(c=>c!==tr).sort((a,b)=>(a.y-a.x)-(b.y-b.x))[0];
-  if(!tl||!tr||!bl||tr.x<=tl.x||bl.y<=tl.y){status('cvStatus','3つのマーカーの位置関係を判定できませんでした。画像を確認してください。','warn');return}
+  // Select by page-edge geometry rather than global x+y ranking.
+  // The previous ranking could mistake printed text/components for the bottom-left marker.
+  const xs=candidates.map(c=>c.x), ys=candidates.map(c=>c.y);
+  const minX=Math.min(...xs), minY=Math.min(...ys);
+  const topBand=Math.max(30,source.height*0.16);
+  const leftBand=Math.max(30,source.width*0.16);
+  const topCandidates=candidates.filter(c=>c.y<=minY+topBand);
+  const leftCandidates=candidates.filter(c=>c.x<=minX+leftBand);
+  let tl=topCandidates.filter(c=>c.x<=minX+leftBand).sort((a,b)=>(a.x+a.y)-(b.x+b.y))[0];
+  if(!tl) tl=[...candidates].sort((a,b)=>(a.x+a.y)-(b.x+b.y))[0];
+  const tr=topCandidates.filter(c=>c.x>tl.x+source.width*0.35).sort((a,b)=>b.x-a.x)[0];
+  const bl=leftCandidates.filter(c=>c.y>tl.y+source.height*0.25).sort((a,b)=>b.y-a.y)[0];
+  if(!tl||!tr||!bl||tr.x<=tl.x||bl.y<=tl.y){status('cvStatus','3つのマーカーの位置関係を判定できませんでした。候補位置を確認してください。','warn');return}
+  const horizontal=Math.hypot(tr.x-tl.x,tr.y-tl.y), vertical=Math.hypot(bl.x-tl.x,bl.y-tl.y);
+  if(horizontal<source.width*0.3||vertical<source.height*0.25){status('cvStatus','マーカー候補の間隔が不自然です。誤検出の可能性があるため補正を中止しました。','warn');return}
   const W=Math.max(300,Math.min(1800,Number($('outW').value)||840)),H=Math.max(300,Math.min(2400,Number($('outH').value)||1188));
   // Compute the affine transform mapping TL, TR and BL to the output page corners.
   const ux=tr.x-tl.x,uy=tr.y-tl.y,vx=bl.x-tl.x,vy=bl.y-tl.y;
